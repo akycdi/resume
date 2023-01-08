@@ -18,17 +18,19 @@ async function main() {
     var button = document.createElement('button');
     var h2Name = document.createElement('h6');
     var paragraph = document.createElement('p');
+
     card_inner.className = "card-body"
     card.className = "card";
     columncard.className = "col-md-4 col-sm-6 col-lg-3";
     paragraph.appendChild(document.createTextNode(item.description));
     h2Name.appendChild(document.createTextNode(item.name));
 
+
     button.type = 'button';
     button.innerHTML = item.name;
     button.className = 'btn btn-primary btn-sm';
     button.onclick = function () {
-
+      window.open(item.html_url, '_blank');
     };
 
     card_inner.appendChild(h2Name);
