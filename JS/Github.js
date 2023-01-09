@@ -7,7 +7,6 @@ async function getRepos(username) {
 async function main() {
   const repos = await getRepos("akycdi");
   console.log(repos);
-
   var cardContainer = document.getElementById('cardcontainer');
 
 
