@@ -1,55 +1,66 @@
-const blogPos = document.querySelector("#blog");
-
-// Dev.to username and api
 const username = "akycdi";
-const api = "https://dev.to/api/articles?";
+const url = `https://dev.to/api/articles?username=${username}`;
 
-// Helper function
-// Create elements
-function createNode(element) {
-  return document.createElement(element);
-}
+const fetchArticles = async () => {
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    console.log(data);
+  }
+};
 
-// function append element
-function append(pareantEl, childEl) {
-  return pareantEl.appendChild(childEl);
-}
+const filterArticles = searchValue => {
+  const articles = document.querySelectorAll(".article");
+  const filteredArticles = Array.from(articles).filter(article => {
+    const title = article.querySelector("h3").textContent;
+    return title.toLowerCase().includes(searchValue.toLowerCase());
+  });
+  // render the filtered articles
+  renderFilteredArticles(filteredArticles);
+};
 
-const ul = createNode('ul');
-ul.classList.add("blog-feed");
+const renderFilteredArticles = filteredArticles => {
+  const articles = document.querySelectorAll(".article");
+  articles.forEach(article => {
+    article.style.display = "none";
+  });
+  filteredArticles.forEach(article => {
+    article.style.display = "block";
+  });
+};
 
-const finalURL = buildURL(username);
-console.log(finalURL);
-fetch(finalURL)
-    .then((response) => response.json())
-    .then(posts => {
-    console.log(posts)
-    
-        posts.forEach((post) => {
-          // creating node elements
-          let li = createNode('li'), a = createNode('a');
-          let h2 = createNode('h2'), p = createNode('p');
-          let small = createNode('small');
+const searchInput = document.querySelector("#search-input");
+const searchButton = document.querySelector("#search-button");
+searchButton.addEventListener("click", event => {
+  event.preventDefault();
+  const searchValue = searchInput.value;
+  filterArticles(searchValue);
+});
 
-          // specifying value, attributes and className
-          a.target = "_blank";
-          p.classList.add("w-info");
-          a.href = post.url;
-          a.innerText = post.title;
-          p.innerText = post.description;
-          // Reaction count
-          small.innerText = '💕 ' + post.public_reactions_count;
-          //appending 
-          append(h2, a);
-          append(li, h2);
-          append(li, p);
-          append(li, small);
-          append(ul, li);
-        })
-        // appending to blog post to feed
-        append(blogPos, ul);
-})
-// build url
-function buildURL(userName) {
-  return `${api}username=${userName}`;
-}
+fetchArticles().then(articles => {
+  renderArticles(articles);
+});
+const renderArticles = articles => {
+  articles.forEach(article => {
+    const articleElement = document.createElement("div");
+    articleElement.classList.add("article");
+    articleElement.innerHTML = `
+      <h3>${article.title}</h3>
+      <img src="${article.cover_image}" alt="Article Cover Image">
+      <p>${article.description}</p>
+    `;
+    document.querySelector("#articles-container").appendChild(articleElement);
+  });
+};
+
+const showAllButton = document.querySelector("#show-all-button");
+showAllButton.addEventListener("click", event => {
+  event.preventDefault();
+  const articles = document.querySelectorAll(".article");
+  articles.forEach(article => {
+    article.style.display = "block";
+  });
+});

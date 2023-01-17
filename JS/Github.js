@@ -1,53 +1,29 @@
-async function getRepos(username) {
-  const response = await fetch(`https://api.github.com/users/${username}/repos`);
-  const data = await response.json();
-  return data;
-}
-
-async function main() {
-  const repos = await getRepos("akycdi");
-  console.log(repos);
-  var cardContainer = document.getElementById('cardcontainer');
-
-
-  repos.forEach((item) => {
-    var columncard = document.createElement('div');
-    var card = document.createElement('div')
-    var card_inner = document.createElement("div");
-    var button = document.createElement('button');
-    var h2Name = document.createElement('h6');
-    var paragraph = document.createElement('p');
-
-    card_inner.className = "card-body"
-    card.className = "card";
-    columncard.className = "col-md-4 col-sm-6 col-lg-3";
-    paragraph.appendChild(document.createTextNode(item.description));
-    h2Name.appendChild(document.createTextNode(item.name));
-
-
-    button.type = 'button';
-    button.innerHTML = item.name;
-    button.className = 'btn btn-primary btn-sm';
-    button.onclick = function () {
-      window.open(item.html_url, '_blank');
-    };
-
-    card_inner.appendChild(h2Name);
-    card_inner.appendChild(paragraph);
-    card_inner.appendChild(button);
-    card.appendChild(card_inner);
-    columncard.appendChild(card);
-    cardContainer.appendChild(columncard);
-
+const username = "akycdi";
+const url = `https://api.github.com/users/${username}/repos`;
+fetch(url)
+  .then(response => response.json())
+  .then(data => {
+    // Update the page with the repository information
+    data.data.forEach(repo => {
+      // create new elements
+      const repoItem = document.createElement("li");
+      const repoLink = document.createElement("a");
+      const repoDescription = document.createElement("p");
+      const repoImage = document.createElement("img");
+      // Fetch the repository's summary image
+      fetch(`https://api.github.com/repos/${username}/${repo.name}/contents/summary.jpg`)
+        .then(response => response.json())
+        .then(imageData => {
+          // Update the src attribute of the image element with the image's URL
+          repoImage.src = imageData.download_url;
+          // Append the image element to the page
+          repoItem.appendChild(repoImage);
+        });
+      repoLink.href = repo.html_url;
+      repoLink.textContent = repo.name;
+      repoDescription.textContent = repo.description;
+      repoItem.appendChild(repoLink);
+      repoItem.appendChild(repoDescription);
+      document.querySelector("#repos").appendChild(repoItem);
+    });
   });
-
-  var i = 0;
-  repos.forEach(element => {
-    console.log(i++);
-    console.log(element.name);
-    console.log(element.url);
-
-  });
-}
-
-main();
