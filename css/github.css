@@ -1,41 +1,14 @@
-#container {
-    width: 80%;
-    margin: 0 auto;
-  }
+#repo-container {
+  display: flex;
+  flex-wrap: wrap;
+}
 
-  /* CSS styles for the list of repositories */
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-  }
+.repo {
+  width: 300px;
+  margin: 10px;
+  text-align: center;
+}
 
-  /* CSS styles for the list items */
-  li {
-    width: 25%;
-    margin: 10px 0;
-    padding: 10px;
-    text-align: center;
-    box-sizing: border-box;
-  }
-
-  /* CSS styles for the repository links */
-  a {
-    color: #3498db;
-    text-decoration: none;
-  }
-
-  /* CSS styles for the repository image */
-  img {
-    width: 100%;
-    height: auto;
-  }
-
-  /* CSS styles for the repository description */
-  p {
-    margin: 10px 0;
-    font-size: 14px;
-    text-align: justify;
-  }
+.repo img {
+  width: 100%;
+}
