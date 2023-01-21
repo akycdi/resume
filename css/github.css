@@ -1,14 +1,5 @@
-#repo-container {
-  display: flex;
-  flex-wrap: wrap;
-}
+.cardStyle{
+  height: 200px;
+  margin: 20px;
 
-.repo {
-  width: 300px;
-  margin: 10px;
-  text-align: center;
-}
-
-.repo img {
-  width: 100%;
 }
