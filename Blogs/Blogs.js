@@ -64,3 +64,4 @@ showAllButton.addEventListener("click", event => {
     article.style.display = "block";
   });
 });
+

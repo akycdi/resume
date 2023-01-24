@@ -84,5 +84,21 @@ async function createCanvas(canvas) {
     //end
 
 }
-// createCanvas();
 main();
+
+
+const carousel = document.querySelector("#carousel");
+const images = carousel.querySelectorAll("img");
+let currentImageIndex = 0;
+
+setInterval(() => {
+  images.forEach((image, index) => {
+    if (index === currentImageIndex) {
+      image.style.display = "block";
+    } else {
+      image.style.display = "none";
+    }
+  });
+
+  currentImageIndex = currentImageIndex + 1 === images.length ? 0 : currentImageIndex + 1;
+}, 5000);
