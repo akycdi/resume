@@ -1,19 +1,36 @@
-var data
-var username = 'akycdi'
+const currentReposDiv = document.getElementById("currentRepos");
+const form = document.getElementById("form");
+const input = document.getElementById("username");
+var currentUser = 'akycdi';
+
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  currentUser = input.value;
+  getRepos(currentUser)
+  displayRepos(currentUser);
+});
 
 async function getRepos(username) {
-  const response = await fetch(`https://api.github.com/users/${username}/repos`);
-  data = await response.json();
-  return data;
+
+  try {
+
+    var response = await fetch(`https://api.github.com/users/${username}/repos`);
+    return await response.json();
+  }
+  catch (error) {
+    if (error.status === 404) {
+      alert(`Username ${username} not found`);
+    } else {
+      console.log(error);
+    }
+  }
 }
 
-async function main() {
+
+async function displayRepos(username) {
   const repos = await getRepos(username);
-  console.log(repos);
-
   var cardContainer = document.getElementById('cardcontainer');
-
-
   repos.forEach((item) => {
     var columncard = document.createElement('div');
     var card = document.createElement('div')
@@ -22,7 +39,6 @@ async function main() {
     var h2Name = document.createElement('h6');
     var paragraph = document.createElement('p');
     var canvas = document.createElement('canvas')
-    //createCanvas(canvas);
     card_inner.className = "card-body"
     card.className = "card cardStyle";
     columncard.className = "col-md-4 col-sm-6 col-lg-3";
@@ -36,7 +52,6 @@ async function main() {
     button.onclick = function () {
       window.open(item.html_url)
     };
-
     card_inner.appendChild(h2Name);
     card_inner.appendChild(paragraph);
     card_inner.appendChild(button);
@@ -47,44 +62,15 @@ async function main() {
 
   });
 
-  var i = 0;
-  repos.forEach(element => {
-    console.log(i++);
-    console.log(element.name);
-    console.log(element.url);
+  // var i = 0;
+  // repos.forEach(element => {
+  //   console.log(i++);
+  //   console.log(element.name);
+  //   console.log(element.url);
 
-  });
+  // });
 }
 
-async function createCanvas(canvas) {
-
-    //canvas code 
-    const ctx = canvas.getContext("2d");
-    // Set the canvas size
-    canvas.width = 300;
-    canvas.height = 200;
-    // Iterate over all repositories
-    for (let repo of data) {
-      const { name, description, html_url } = repo;
-      // Get the last commit for the repository
-      const commitResponse = await fetch(`https://api.github.com/repos/${username}/${name}/commits`);
-      const commit = await commitResponse.json();
-      const { commit: { message, author: { name: authorName, email } } } = commit[0];
-      // Generate the rich link preview image
-      ctx.fillStyle = "grey";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "yellow";
-      ctx.font = "20px Arial";
-      ctx.fillText(name, 10, 30);
-      ctx.fillText(authorName, 10, 60);
-      ctx.fillText(message, 10, 90);
-      ctx.fillText(description, 10, 120);
-      ctx.fillText(html_url, 10, 150);
-    }
-    //end
-
-}
-main();
 
 
 const carousel = document.querySelector("#carousel");
@@ -102,3 +88,8 @@ setInterval(() => {
 
   currentImageIndex = currentImageIndex + 1 === images.length ? 0 : currentImageIndex + 1;
 }, 5000);
+
+
+window.addEventListener("load", function () {
+  displayRepos(currentUser);
+});
